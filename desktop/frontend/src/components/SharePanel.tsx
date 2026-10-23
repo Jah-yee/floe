@@ -66,9 +66,16 @@ export default function SharePanel({code, link}: {code: string; link: string}) {
             </div>
             <div className="flex items-center justify-center gap-2 pt-0.5">
                 <button
+                    type="button"
                     onClick={() => setQrOpen((o) => !o)}
-                    aria-pressed={qrOpen}
-                    aria-label="Toggle QR code"
+                    // A disclosure, not a toggle: the words on the button change
+                    // with the state, so the name comes from them and
+                    // aria-expanded carries the state. An aria-label would
+                    // replace "Show QR"/"Hide QR" as the accessible name and
+                    // fail WCAG 2.5.3 (Label in Name), and aria-pressed beside
+                    // aria-expanded would report a pressed "Hide QR".
+                    aria-expanded={qrOpen}
+                    aria-controls={qrOpen ? 'floe-share-qr' : undefined}
                     className={cn(actionBtn, 'w-24', qrOpen ? 'border-white/20 bg-white/10 text-zinc-100' : actionIdle)}
                 >
                     <QrCode className="h-3.5 w-3.5"/>
@@ -86,7 +93,7 @@ export default function SharePanel({code, link}: {code: string; link: string}) {
                 )}
             </div>
             {qrOpen && (
-                <div className="animate-floe-in flex flex-col items-center gap-2 pt-1">
+                <div id="floe-share-qr" className="animate-floe-in flex flex-col items-center gap-2 pt-1">
                     <div className="rounded-2xl bg-white p-3 shadow-lg ring-1 ring-white/10">
                         <QRCode value={link} size={128} style={{height: 128, width: 128}} fgColor="#09090b" bgColor="#ffffff" level="M"/>
                     </div>
